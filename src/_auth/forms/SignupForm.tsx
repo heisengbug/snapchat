@@ -9,18 +9,20 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import Loader from '@/components/ui/shared/Loader'
+import { createUserAccount } from '@/lib/appwrite/api'
 import { SignupValidation } from '@/lib/validation'
 
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
+import { Link } from 'react-router-dom'
 import { z } from 'zod'
 
 
 
 const SignupForm = () => {
 
-  const isLoding = true;
+  const isLoding = false;
 
 
   const form = useForm<z.infer<typeof SignupValidation>>({
@@ -33,10 +35,12 @@ const SignupForm = () => {
     },
   })
 
-  function onSubmit(values: z.infer<typeof SignupValidation>) {
+  async function onSubmit(values: z.infer<typeof SignupValidation>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values)
+    const newUser = await createUserAccount(values);
+
+    console.log(newUser);
   }
 
   return (
@@ -104,6 +108,11 @@ const SignupForm = () => {
             <Loader/> Loading...
           </div>): "Sign up" }
         </Button>
+
+        <p className="text-small-regular text-light-2 text-center mt-2">
+          Already hava an account?
+          <Link to="/sign-in" className="text-primary-500 ml-1 text-small-semibold ">Log in</Link>
+        </p>
       </form>
       </div>
     </Form>
